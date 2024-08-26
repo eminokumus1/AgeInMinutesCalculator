@@ -25,13 +25,13 @@ class MainActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         //month index starts with zero, so we add one
-        val month = calendar.get(Calendar.MONTH) + 1
+        val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        DatePickerDialog(
+        val dpd = DatePickerDialog(
             this,
             { view, selectedYear, selectedMonth, selectedDay ->
-                val selectedDateStr = "$selectedDay/$selectedMonth/$selectedYear"
+                val selectedDateStr = "$selectedDay/${selectedMonth + 1}/$selectedYear"
                 binding.dateText.text = selectedDateStr
 
                 val selectedDate = convertStringToDate(selectedDateStr)
@@ -50,8 +50,12 @@ class MainActivity : AppCompatActivity() {
             year,
             month,
             day
-        ).show()
+        )
+
+        dpd.datePicker.maxDate = System.currentTimeMillis() - 86400000
+        dpd.show()
     }
+
 
     private fun convertStringToDate(dateString: String): Date? {
         val format = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
