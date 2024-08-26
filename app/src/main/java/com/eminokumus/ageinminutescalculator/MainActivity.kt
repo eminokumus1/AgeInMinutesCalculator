@@ -36,16 +36,19 @@ class MainActivity : AppCompatActivity() {
 
                 val selectedDate = convertStringToDate(selectedDateStr)
 
-                val selectedDateInMinutes = selectedDate?.time?.div(60000)
+                selectedDate?.let {
+                    val selectedDateInMinutes = selectedDate.time.div(60000)
 
-                val currentDate = getCurrentDate()
+                    val currentDate = getCurrentDate()
+                    currentDate.let {
+                        val currentDateInMinutes = currentDate?.time?.div(60000)
 
-                val currentDateInMinutes = currentDate?.time?.div(60000)
+                        val differenceInMinutes = currentDateInMinutes?.minus(selectedDateInMinutes)
 
-                val differenceInMinutes = currentDateInMinutes?.minus(selectedDateInMinutes ?: currentDateInMinutes)
+                        binding.minutesText.text = differenceInMinutes.toString()
+                    }
 
-                binding.minutesText.text = differenceInMinutes.toString()
-
+                }
             },
             year,
             month,
