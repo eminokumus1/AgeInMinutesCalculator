@@ -20,18 +20,31 @@ class MainActivity : AppCompatActivity() {
             clickDatePicker()
         }
     }
-    private fun clickDatePicker(){
+
+    private fun clickDatePicker() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         //month index starts with zero, so we add one
-        val month = calendar.get(Calendar.MONTH)+1
+        val month = calendar.get(Calendar.MONTH) + 1
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        DatePickerDialog(this,
+        DatePickerDialog(
+            this,
             { view, selectedYear, selectedMonth, selectedDay ->
                 val selectedDateStr = "$selectedDay/$selectedMonth/$selectedYear"
                 binding.dateText.text = selectedDateStr
 
+                val selectedDate = convertStringToDate(selectedDateStr)
+
+                val selectedDateInMinutes = selectedDate?.time?.div(60000)
+
+                val currentDate = getCurrentDate()
+
+                val currentDateInMinutes = currentDate?.time?.div(60000)
+
+                val differenceInMinutes = currentDateInMinutes?.minus(selectedDateInMinutes ?: currentDateInMinutes)
+
+                binding.minutesText.text = differenceInMinutes.toString()
 
             },
             year,
@@ -40,5 +53,13 @@ class MainActivity : AppCompatActivity() {
         ).show()
     }
 
+    private fun convertStringToDate(dateString: String): Date? {
+        val format = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        return format.parse(dateString)
+    }
 
+    private fun getCurrentDate(): Date? {
+        val format = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        return format.parse(format.format(System.currentTimeMillis()))
+    }
 }
